@@ -18,7 +18,7 @@ def get_app_config(name):
     return None
 
 def save_as_current_config(cfg):
-    j = json.dumps(cfg)
+    j = json.dumps(cfg, indent=4)
     with open(current_app_file_name, 'wb') as f:
         f.write(j.encode())
 
@@ -32,7 +32,7 @@ def add_new_app():
             if Path.is_file(Path(fn)):
                 with open(os.path.join(os.getcwd(), f'app_{name}.txt'), 'wb') as f:
                     cfg = { "name": name, "jar": fn }
-                    f.write(json.dumps(cfg).encode())
+                    f.write(json.dumps(cfg, indent=4).encode())
                 return (cfg, None)
             else:
                 print('Invalid path to jar')
@@ -98,7 +98,10 @@ def get_envs(cfg):
 
 def save_config(cfg):
     with open(os.path.join(os.getcwd(), f'app_{cfg['name']}.txt'), 'wb') as f:
-        f.write(json.dumps(cfg).encode())
+        f.write(json.dumps(cfg, indent=4).encode())
+    curr, _ = get_current_app()
+    if cfg['name'] == curr['name']:
+        save_as_current_config(cfg)
 
 def add_envs(cfg):
     while True:
@@ -106,6 +109,9 @@ def add_envs(cfg):
         if command and command == 'q':
             save_config(cfg)
             return (None, command)
+        elif command and command == 'ok':
+            save_config(cfg)
+            return (None, None)
         envs = get_envs(cfg)
         envs.update(envv)
 
@@ -131,6 +137,7 @@ def main():
             i = add_envs(current_app)
         elif i == 3:
             print('If the app has environment variables there should be a property called envs')
+            current_app, _ = get_current_app()
             print(json.dumps(current_app, indent=4))
         elif i == 4:
             print('Bye.....')

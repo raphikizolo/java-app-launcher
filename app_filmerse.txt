@@ -1,1 +1,9 @@
-{"name": "filmerse", "jar": "/media/raphael/vault/projects/kotlin/filmerse_be/build/libs/filmerse_be-0.0.1-SNAPSHOT.jar"}
+{
+    "name": "filmerse",
+    "jar": "/media/raphael/vault/projects/kotlin/filmerse_be/build/libs/filmerse_be-0.0.1-SNAPSHOT.jar",
+    "envs": {
+        "prop": "val",
+        "prop2": "val",
+        "prop3": "val"
+    }
+}
