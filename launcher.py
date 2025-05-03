@@ -116,20 +116,43 @@ def add_envs(cfg):
         envs.update(envv)
 
 def get_actions():
-    return ['1. run app', 
+    return ['1. run current app', 
             '2. add environment variable',
             '3. show environment variables',
-            '4. quit',
+            '4. add new app',
+            '5. run another app',
+            '6. list configured apps',
+            '7. quit',
             ]
+
+def list_configured_apps():
+    apps_files = []
+    for _, _, files in os.walk(os.getcwd()):
+        apps_files.extend([f for f in files if f.startswith('app_')])
+    numbered = [f'{i + 1}. {f}' for i, f in enumerate(apps_files)]
+    print('************** configured apps ***************')
+    print()
+    print()
+    print("\n".join(numbered))
+    print()
+    print()
+    print('************** configured apps ***************')
+    return apps_files
+
 
 
 def main():
     while True:
         current_app, command = get_current_app()
         if command and command.strip() == 'q':
+            print('Bye...')
             break
         print(f'Current app ==> {str({ 'name': current_app['name'], 'jar': current_app['jar']})}')
-        i = input('Enter the next thing to do.\n' + '\n'.join(get_actions()) + '\n>> ')
+        command = input('Enter the next thing to do. q to quit:\n' + '\n'.join(get_actions()) + '\n>> ')
+        if command and command.strip() == 'q':
+            print('Bye...')
+            break
+        i = command
         i = int(i.strip())
         if i == 1:
             run_app(current_app)
@@ -140,6 +163,18 @@ def main():
             current_app, _ = get_current_app()
             print(json.dumps(current_app, indent=4))
         elif i == 4:
+            _, command = add_new_app()
+        elif i == 5:
+            app_file_names = list_configured_apps()
+            command = input('Select app: e.g. Enter 1 to select the first one. q to quit: >>> ')
+            if command and command.strip() == 'q':
+                print('Bye...')
+                break
+            app = app_file_names[int(command) - 1]
+            ask_set_current_app_config(app.replace('app_', '').replace('.txt', ''))
+        elif i == 6:
+            list_configured_apps()
+        elif i == 7:
             print('Bye.....')
             break
 
