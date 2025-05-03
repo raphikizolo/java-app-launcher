@@ -120,7 +120,7 @@ def get_actions():
             '2. add environment variable',
             '3. show environment variables',
             '4. add new app',
-            '5. run another app',
+            '5. change current app',
             '6. list configured apps',
             '7. quit',
             ]
